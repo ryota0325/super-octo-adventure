@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Square Date Widget</title>
+<style>
+  :root{
+    --size: 600px; /* 表示上の基準サイズ。必要なら変更してや */
+  }
+  html,body{
+    height:100%;
+    margin:0;
+    padding:0;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    background: linear-gradient(135deg,#f6d365 0%, #fda085 100%); /* 背景は自由に変えてな */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  /* 正方形コンテナ */
+  .widget-wrap{
+    width: min(100%, var(--size));
+    aspect-ratio: 1 / 1;
+    margin: 20px auto; /* Notionなどで埋める時は調整 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  a.widget {
+    display: block;
+    width: 90%;
+    height: 90%;
+    border-radius: 18px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* 背景イメージを使いたい時は .bg-image に style="background-image: url(...)" を付けてな */
+  .widget .bg{
+    position:absolute;
+    inset:0;
+    background-position:center;
+    background-size:cover;
+    filter: saturate(1) contrast(0.95);
+    z-index:0;
+  }
+
+  /* 中央の半透明白四角 */
+  .box {
+    position: relative;
+    z-index:2;
+    width: 66%;
+    max-width: 420px;
+    aspect-ratio: 1 / 1;
+    margin: auto;
+    background: rgba(255,255,255,0.86); /* 白の半透明 */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    padding: 18px;
+    text-align: center;
+  }
+
+  .month {
+    font-size: clamp(12px, 2.2vw, 14px);
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color:#333;
+  }
+
+  .date {
+    font-size: clamp(48px, 10vw, 96px);
+    line-height: 0.9;
+    font-weight: 700;
+    color:#111;
+    margin: 0;
+  }
+
+  .weekday {
+    font-size: clamp(12px, 2.2vw, 14px);
+    margin-top:8px;
+    color:#555;
+    font-weight:600;
+  }
+
+  /* クリック感のための簡単なホバー効果 */
+  a.widget:active .box { transform: translateY(2px) scale(0.998); }
+  a.widget:hover .box { transform: translateY(-2px); transition: transform .18s ease; }
+
+  /* 小さい領域でも見やすく */
+  @media (max-width:420px){
+    .box{ width:78%; padding:12px; border-radius:12px; }
+  }
+</style>
+</head>
+<body>
+  <!-- リンク先を YOUR_LINK_HERE に差し替えてな。Notionで使うならこのHTMLをどっかにホスティングしてそのURLを埋めるんやで -->
+  <div class="widget-wrap">
+    <a class="widget" id="widgetLink" href="YOUR_LINK_HERE" target="_blank" rel="noopener noreferrer">
+      <div class="bg" id="bgImage"></div>
+      <div class="box" role="button" aria-label="Date widget">
+        <div class="month" id="monthLabel">MONTH</div>
+        <div class="date" id="dateLabel">00</div>
+        <div class="weekday" id="weekdayLabel">WEEKDAY</div>
+      </div>
+    </a>
+  </div>
+
+<script>
+  // 日付を英語で表示するスクリプト（サンプルは英語表記）
+  (function(){
+    const d = new Date();
+    // 月名（英語短縮/フルどっちでもOK）
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    const weekdays = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    const monthLabel = document.getElementById('monthLabel');
+    const dateLabel = document.getElementById('dateLabel');
+    const weekdayLabel = document.getElementById('weekdayLabel');
+
+    monthLabel.textContent = months[d.getMonth()];
+    dateLabel.textContent = d.getDate();
+    weekdayLabel.textContent = weekdays[d.getDay()];
+
+    // もし日本語で表示したかったら下の2行をアンコメントして英語配列をコメントアウトしてや
+    // const months_jp = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+    // monthLabel.textContent = months_jp[d.getMonth()];
+
+    // 背景画像を使いたい場合、ここで設定してや（例: widget.style.backgroundImage = 'url(....)'）
+    // document.getElementById('bgImage').style.backgroundImage = 'url(YOUR_BACKGROUND_IMAGE_URL)';
+  })();
+</script>
+</body>
+</html>
